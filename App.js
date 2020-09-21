@@ -1,11 +1,17 @@
 import { StatusBar } from 'expo-status-bar';
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, View, Image, Dimensions } from 'react-native';
+
+import InfoWindow from './InfoWindow';
+
+const winHeight = Dimensions.get("window").height;
+const winWidth = Dimensions.get("window").width;
 
 export default function App() {
   return (
     <View style={styles.container}>
-      <Text>Open up App.js to start working on your app!</Text>
+      <Image style={styles.headImg} source={require('./assets/rain-bg.jpg')}></Image>
+      <InfoWindow></InfoWindow>
       <StatusBar style="auto" />
     </View>
   );
@@ -14,8 +20,10 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    backgroundColor: '#444444'
   },
+  headImg: {
+    width: winWidth,
+    height: winWidth / 3
+  }
 });
