@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Image } from 'react-native';
 
 export default function DayCard(props) {
     /**
@@ -12,7 +12,7 @@ export default function DayCard(props) {
         var d = new Date();
         var dayName = days[d.getDay()];
 
-        if(dayName === props.day) {
+        if (dayName === props.day) {
             width = 3;
         }
 
@@ -20,9 +20,9 @@ export default function DayCard(props) {
     }
 
     return (
-        <View style={[styles.dayCard, { borderWidth: cardWidth()}]}>
+        <View style={[styles.dayCard, { borderWidth: cardWidth() }]}>
             <Text style={styles.dayTitle}>{props.day}</Text>
-            <Text style={styles.icon}>{props.icon}</Text>
+            <Image style={{ width: 44, height: 44 }} source={{ uri: "https:" + props.icon }} />
             <Text style={styles.tempText}>{props.temp} °C</Text>
         </View>
     );

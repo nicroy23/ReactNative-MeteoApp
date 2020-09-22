@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, View, Dimensions, TextInput } from 'react-native';
 
 import WeekCards from './WeekCards';
@@ -6,25 +6,34 @@ import WeekCards from './WeekCards';
 const winHeight = Dimensions.get("window").height;
 const winWidth = Dimensions.get("window").width;
 
-export default function BottomBackground() {
+export default function BottomBackground(props) {
+    const [temp, setTemp] = useState(15);
+    const [forecast, setForecast] = useState([]);
+
+    function searchCity(event) {
+        const city = event.nativeEvent.text;
+        const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${city}&days=7`;
+
+        if (city.length > 0) {
+            fetch(API_URL)
+                .then((res) => { return res.json() })
+                .then((jsonRes) => {
+                    setTemp(jsonRes.current.temp_c);
+                    setForecast(jsonRes.forecast.forecastday);
+                })
+                .catch((err) => { console.log(err) });
+        }
+    }
+
     return (
         <View style={styles.bottomBg}>
-            <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={require('./assets/vector-wallpaper3.png')}>
+            <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={props.background}>
                 <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}></TextInput>
-                <Text style={styles.mainWeather}>24 °C</Text>
-                <WeekCards style={styles.weekCards}></WeekCards>
+                <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text>
+                <WeekCards forecast={forecast} style={styles.weekCards}></WeekCards>
             </ImageBackground>
         </View>
     );
-}
-
-function searchCity(event) {
-    const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${event.nativeEvent.text}&days=7`;
-
-    fetch(API_URL)
-        .then((res) => {return res.json()})
-        .then((json) => {console.log(json);})
-        .catch((err) => {console.log(err)});
 }
 
 const styles = StyleSheet.create({

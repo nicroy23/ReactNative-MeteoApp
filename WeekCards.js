@@ -1,37 +1,39 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { StyleSheet, Text, View, Dimensions, Image } from 'react-native';
 
 const winHeight = Dimensions.get("window").height;
 
 import DayCard from './DayCard';
 
-const days = [
-    { day: "Mon", temp: 12, icon: "🌧️" },
-    { day: "Tue", temp: 16, icon: "☀" },
-    { day: "Wed", temp: 14, icon: "🌦️" },
-    { day: "Thu", temp: 10, icon: "⛈️" },
-    { day: "Fri", temp: 15, icon: "☀️" },
-    { day: "Sat", temp: 18, icon: "☀️" },
-    { day: "Sun", temp: 8, icon: "⛈️" }
-];
+export default function WeekCards(props) {
+    const days = props.forecast; 
+    
+    /*[
+        { day: "Mon", temp: 12, icon: "🌧️" },
+        { day: "Tue", temp: 16, icon: "☀" },
+        { day: "Wed", temp: 14, icon: "🌦️" },
+        { day: "Thu", temp: 10, icon: "⛈️" },
+        { day: "Fri", temp: 15, icon: "☀️" },
+        { day: "Sat", temp: 18, icon: "☀️" },
+        { day: "Sun", temp: 8, icon: "⛈️" }
+    ];*/
+    
+    function weekAvg() {
+        let total = 0;
+    
+        days.forEach(day => {
+            total += day.day.avgtemp_c;
+        });
+    
+        return Math.round(total / days.length);
+    }
 
-function weekAvg() {
-    let total = 0;
-
-    days.forEach(day => {
-        total += day.temp;
-    });
-
-    return Math.round(total / days.length);
-}
-
-export default function WeekCards() {
     return (
         <View style={styles.weekCards}>
             {days.map((day, i) =>
-                <DayCard key={i} day={day.day} temp={day.temp} icon={day.icon}></DayCard>
+                <DayCard key={i} icon={day.day.condition.icon} day={new Date(day.date.replace(/-/g, '/')).toString().substr(0, 3)} temp={Math.round(day.day.avgtemp_c)}></DayCard>
             )}
-            <DayCard day={"Avg"} temp={weekAvg()} icon={"👨‍🔬️"}></DayCard>
+            <DayCard day={"Average"} temp={weekAvg()} icon={"//cdn.iconscout.com/icon/free/png-256/science-research-testtube-experiment-bubble-study-project-2-7248.png"}></DayCard>
         </View>
     );
 }
