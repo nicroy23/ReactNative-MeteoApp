@@ -10,7 +10,6 @@ const winWidth = Dimensions.get("window").width;
 export default function App() {
   return (
     <View style={styles.container}>
-      <Image style={styles.headImg} source={require('./assets/rain-bg.jpg')}></Image>
       <InfoWindow></InfoWindow>
       <StatusBar style="auto" />
     </View>
@@ -20,10 +19,5 @@ export default function App() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#444444'
-  },
-  headImg: {
-    width: winWidth,
-    height: winWidth / 3
   }
 });

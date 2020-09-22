@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, Text, View, Dimensions } from 'react-native';
+import { ImageBackground, StyleSheet, Text, View, Dimensions, TextInput } from 'react-native';
 
 import WeekCards from './WeekCards';
 
@@ -9,33 +9,35 @@ const winWidth = Dimensions.get("window").width;
 export default function BottomBackground() {
     return (
         <View style={styles.bottomBg}>
-            <Text style={styles.location}>Laval</Text>
-            <Text style={styles.mainWeather}>24 °C</Text>
-            <WeekCards style={styles.weekCards}></WeekCards>
+            <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={require('./assets/vector-wallpaper3.png')}>
+                <TextInput style={styles.location} placeholder="City" placeholderTextColor={"white"}></TextInput>
+                <Text style={styles.mainWeather}>24 °C</Text>
+                <WeekCards style={styles.weekCards}></WeekCards>
+            </ImageBackground>
         </View>
     );
 }
 
 const styles = StyleSheet.create({
     bottomBg: {
-        position: 'absolute',
-        bottom: 0,
-        flexDirection: 'column',
-        height: winHeight * 5 / 6,
+        height: winHeight,
         width: winWidth,
-        backgroundColor: "#10A5F5",
-        alignItems: 'center',
-        justifyContent: 'flex-start',
-        borderTopLeftRadius: 30,
-        borderTopRightRadius: 30,
     },
     location: {
         padding: 20,
         color: 'white',
         fontSize: 50,
+        textAlign: "center"
     },
     mainWeather: {
         color: 'white',
         fontSize: 35,
+    },
+    backImg: {
+        width: winWidth,
+        height: winHeight,
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'flex-start',
     }
 });

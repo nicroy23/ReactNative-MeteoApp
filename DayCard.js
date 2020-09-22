@@ -2,8 +2,25 @@ import React from 'react';
 import { StyleSheet, Text, View, Dimensions } from 'react-native';
 
 export default function DayCard(props) {
-    return(
-        <View style={styles.dayCard}>
+    /**
+     * Function that changes the width of the card so that the card which displays today is thicker.
+     */
+    function cardWidth() {
+        let width = 1;
+
+        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+        var d = new Date();
+        var dayName = days[d.getDay()];
+
+        if(dayName === props.day) {
+            width = 2;
+        }
+
+        return width;
+    }
+
+    return (
+        <View style={[styles.dayCard, { borderWidth: cardWidth()}]}>
             <Text style={styles.dayTitle}>{props.day}</Text>
             <Text style={styles.icon}>{props.icon}</Text>
             <Text style={styles.tempText}>{props.temp} °C</Text>
@@ -15,7 +32,6 @@ const styles = StyleSheet.create({
     dayCard: {
         alignItems: 'center',
         justifyContent: 'space-evenly',
-        borderWidth: 1,
         borderRadius: 30,
         height: 120,
         width: 80,

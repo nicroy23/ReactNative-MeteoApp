@@ -28,8 +28,8 @@ function weekAvg() {
 export default function WeekCards() {
     return (
         <View style={styles.weekCards}>
-            {days.map((day) =>
-                <DayCard key={day.index} day={day.day} temp={day.temp} icon={day.icon}></DayCard>
+            {days.map((day, i) =>
+                <DayCard key={i} day={day.day} temp={day.temp} icon={day.icon}></DayCard>
             )}
             <DayCard day={"Avg"} temp={weekAvg()} icon={"👨‍🔬️"}></DayCard>
         </View>
