@@ -13,7 +13,7 @@ export default function DayCard(props) {
         var dayName = days[d.getDay()];
 
         if(dayName === props.day) {
-            width = 2;
+            width = 3;
         }
 
         return width;
