@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, Text, View, Dimensions, TextInput } from 'react-native';
 
 import WeekCards from './WeekCards';
+import MoreInfo from "./MoreInfo";
 
 const winHeight = Dimensions.get("window").height;
 const winWidth = Dimensions.get("window").width;
@@ -30,7 +31,8 @@ export default function BottomBackground(props) {
             <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={props.background}>
                 <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}></TextInput>
                 <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text>
-                <WeekCards forecast={forecast} style={styles.weekCards}></WeekCards>
+                <WeekCards forecast={forecast}></WeekCards>
+                <MoreInfo></MoreInfo>
             </ImageBackground>
         </View>
     );
@@ -47,11 +49,13 @@ const styles = StyleSheet.create({
         fontSize: 40,
         textAlign: "center",
         borderBottomWidth: 1,
-        borderBottomColor: "white"
+        borderBottomColor: "white",
+        fontFamily: "Quicksand_500Medium"
     },
     mainWeather: {
         color: 'white',
-        fontSize: 35,
+        fontSize: 40,
+        fontFamily: "Quicksand_500Medium"
     },
     backImg: {
         width: winWidth,

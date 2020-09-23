@@ -44,7 +44,6 @@ const styles = StyleSheet.create({
         flexDirection: "row",
         alignItems: 'center',
         justifyContent: 'center',
-        height: winHeight / 2,
         marginLeft: 'auto',
         marginRight: 'auto',
         marginTop: 10
