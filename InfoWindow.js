@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { ImageBackground, StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity } from 'react-native';
+import { ActivityIndicator, ImageBackground, StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 
 import WeekCards from './WeekCards';
@@ -12,7 +12,7 @@ export default function BottomBackground(props) {
     const [temp, setTemp] = useState(15);
     const [locationInfo, setLocationInfo] = useState({});
     const [forecast, setForecast] = useState([]);
-    const [loading, setLoading] = useState(null);
+    const [loading, setLoading] = useState(false);
 
     function txtColour(value) {
         let col = "#26D701";
@@ -31,14 +31,14 @@ export default function BottomBackground(props) {
         const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${city}&days=7`;
 
         if (city.length > 0) {
-            setLoading("Loading...");
+            setLoading(true);
             fetch(API_URL)
                 .then((res) => { return res.json() })
                 .then((jsonRes) => {
                     setTemp(jsonRes.current.temp_c);
                     setLocationInfo(jsonRes.location)
                     setForecast(jsonRes.forecast.forecastday);
-                    setLoading(null);
+                    setLoading(false);
                 })
                 .catch((err) => { console.log(err) });
         } else {
@@ -65,16 +65,16 @@ export default function BottomBackground(props) {
     }
 
     async function useMyLocation() {
-        setLoading("Loading...");
+        setLoading(true);
         let { status } = await Location.requestPermissionsAsync();
         if (status !== 'granted') {
-            setLoading('Permission to access location was denied...');
+            setLoading(false);
         }
 
         if (status) {
             let location = await Location.getCurrentPositionAsync({});
             await searchCityLatLong(location.coords.latitude + "," + location.coords.longitude);
-            setLoading(null);
+            setLoading(false);
         }
     }
 
@@ -83,7 +83,7 @@ export default function BottomBackground(props) {
             <View style={styles.bottomBg}>
                 <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={props.background}>
                     <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}>{locationInfo.name}</TextInput>
-                    <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text>
+                    {(!loading) ? <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text> : <ActivityIndicator animating={loading} size="large" color="#FFF"/>}
                     <WeekCards forecast={forecast}></WeekCards>
                     <MoreInfo windColour={txtColour(forecast[0].day.maxwind_kph)} rainColour={txtColour(parseInt(forecast[0].day.daily_chance_of_rain))} locationInfo={locationInfo} dayInfo={forecast[0]}></MoreInfo>
                 </ImageBackground>
@@ -94,7 +94,7 @@ export default function BottomBackground(props) {
             <View style={styles.bottomBg}>
                 <ImageBackground style={styles.backImgNoInfo} blurRadius={10} resizeMode="cover" source={props.background}>
                     <Image source={require("./assets/logo_transparent.png")} style={{ width: 300, height: 300 }}></Image>
-                    <Text style={{ color: "white", fontSize: 30, fontFamily: "Quicksand_500Medium" }}>{loading}</Text>
+                    {(loading) ? <ActivityIndicator animating={loading} size="large" color="#FFF"/> : null}
                     <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}></TextInput>
                     <TouchableOpacity onPress={() => useMyLocation()} style={styles.locationBtn}>
                         <Text style={{ color: "white", fontSize: 15, fontFamily: "Quicksand_500Medium" }}>Use my location</Text>
@@ -114,6 +114,7 @@ const styles = StyleSheet.create({
         margin: 20,
         color: 'white',
         fontSize: 40,
+        width: "60%",
         textAlign: "center",
         borderBottomWidth: 1,
         borderBottomColor: "white",
