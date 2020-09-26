@@ -4,6 +4,7 @@ import * as Location from 'expo-location';
 
 import WeekCards from './WeekCards';
 import MoreInfo from "./MoreInfo";
+import DayCard from './DayCard';
 
 const winHeight = Dimensions.get("window").height;
 const winWidth = Dimensions.get("window").width;
@@ -13,6 +14,7 @@ export default function BottomBackground(props) {
     const [locationInfo, setLocationInfo] = useState({});
     const [forecast, setForecast] = useState([]);
     const [loading, setLoading] = useState(false);
+    const [focusDay, setFocusDay] = useState(0);
 
     function txtColour(value) {
         let col = "#26D701";
@@ -24,6 +26,16 @@ export default function BottomBackground(props) {
         }
 
         return col;
+    }
+
+    function weekAvg() {
+        let total = 0;
+
+        forecast.forEach(day => {
+            total += day.day.avgtemp_c;
+        });
+
+        return Math.round(total / forecast.length);
     }
 
     function searchCity(event) {
@@ -83,9 +95,16 @@ export default function BottomBackground(props) {
             <View style={styles.bottomBg}>
                 <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={props.background}>
                     <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}>{locationInfo.name}</TextInput>
-                    {(!loading) ? <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text> : <ActivityIndicator animating={loading} size="large" color="#FFF"/>}
-                    <WeekCards forecast={forecast}></WeekCards>
-                    <MoreInfo windColour={txtColour(forecast[0].day.maxwind_kph)} rainColour={txtColour(parseInt(forecast[0].day.daily_chance_of_rain))} locationInfo={locationInfo} dayInfo={forecast[0]}></MoreInfo>
+                    {(!loading) ? <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text> : <ActivityIndicator animating={loading} size="large" color="#FFF" />}
+                    <View style={styles.weekCards}>
+                        {forecast.map((day, i) =>
+                            <TouchableOpacity key={i} onPress={() => {setFocusDay(i)}}>
+                                <DayCard key={i} index={i} focus={focusDay} icon={day.day.condition.icon} day={new Date(day.date.replace(/-/g, '/')).toString().substr(0, 3)} temp={Math.round(day.day.avgtemp_c)}></DayCard>
+                            </TouchableOpacity>
+                        )}
+                        <DayCard day={"Average"} index={10} temp={weekAvg()} icon={"//cdn.iconscout.com/icon/free/png-256/science-research-testtube-experiment-bubble-study-project-2-7248.png"}></DayCard>
+                    </View>
+                    <MoreInfo windColour={txtColour(forecast[focusDay].day.maxwind_kph)} rainColour={txtColour(parseInt(forecast[focusDay].day.daily_chance_of_rain))} locationInfo={locationInfo} dayInfo={forecast[focusDay]}></MoreInfo>
                 </ImageBackground>
             </View>
         );
@@ -94,7 +113,7 @@ export default function BottomBackground(props) {
             <View style={styles.bottomBg}>
                 <ImageBackground style={styles.backImgNoInfo} blurRadius={10} resizeMode="cover" source={props.background}>
                     <Image source={require("./assets/logo_transparent.png")} style={{ width: 300, height: 300 }}></Image>
-                    {(loading) ? <ActivityIndicator animating={loading} size="large" color="#FFF"/> : null}
+                    {(loading) ? <ActivityIndicator animating={loading} size="large" color="#FFF" /> : null}
                     <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}></TextInput>
                     <TouchableOpacity onPress={() => useMyLocation()} style={styles.locationBtn}>
                         <Text style={{ color: "white", fontSize: 15, fontFamily: "Quicksand_500Medium" }}>Use my location</Text>
@@ -140,8 +159,17 @@ const styles = StyleSheet.create({
         justifyContent: 'flex-start'
     },
     locationBtn: {
-        backgroundColor: "#187BCD",
+        backgroundColor: "#06A94D",
         padding: 10,
         borderRadius: 30
+    },
+    weekCards: {
+        flexWrap: 'wrap',
+        flexDirection: "row",
+        alignItems: 'center',
+        justifyContent: 'center',
+        marginLeft: 'auto',
+        marginRight: 'auto',
+        marginTop: 10
     }
 });

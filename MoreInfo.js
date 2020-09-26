@@ -55,13 +55,15 @@ export default function MoreInfo(props) {
 const styles = StyleSheet.create({
     moreInfo: {
         display: "flex",
+        flex: 1,
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         width: "95%",
-        height: "55%",
         margin: "auto",
         marginTop: 8,
+        marginBottom: 8,
         borderRadius: 30,
-        alignItems: "center"
+        alignItems: "center",
+        justifyContent: "space-evenly"
     },
     rowBox: {
         display: "flex",

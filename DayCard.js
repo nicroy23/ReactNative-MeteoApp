@@ -1,26 +1,37 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
 
 export default function DayCard(props) {
     // Puts the width of todays card to the good with but allows to change it too (maybe will add change on click...)
-    const[cWidth, setCWidth] = useState(cardWidth())
-    
+    const [cWidth, setCWidth] = useState(1);
+
     /**
      * Function that changes the width of the card so that the card which displays today is thicker.
      */
-    function cardWidth() {
-        let width = 1;
+    // function cardWidth() {
+    //     let width = 1;
 
-        var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-        var d = new Date();
-        var dayName = days[d.getDay()];
+    //     var days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    //     var d = new Date();
+    //     var dayName = days[d.getDay()];
 
-        if (dayName === props.day) {
-            width = 3;
+    //     if (dayName === props.day) {
+    //         width = 3;
+    //     }
+
+    //     return width;
+    // }
+
+    /**
+     * Uses the useEffect react hook to choose the card with when the component loads.
+     */
+    useEffect(() => {
+        if (props.index === props.focus) {
+            setCWidth(3);
+        } else {
+            setCWidth(1);
         }
-
-        return width;
-    }
+    });
 
     return (
         <View style={[styles.dayCard, { borderWidth: cWidth }]}>
