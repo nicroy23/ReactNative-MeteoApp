@@ -34,10 +34,12 @@ export default function DayCard(props) {
     });
 
     return (
-        <View style={[styles.dayCard, { borderWidth: cWidth }]}>
-            <Text style={styles.dayTitle}>{props.day}</Text>
-            <Image style={{ width: 44, height: 44 }} source={{ uri: "https:" + props.icon }} />
-            <Text style={styles.tempText}>{props.temp} °C</Text>
+        <View style={styles.bottomTriangle}>
+            <View style={[styles.dayCard, { borderWidth: cWidth }]}>
+                <Text style={styles.dayTitle}>{props.day}</Text>
+                <Image style={{ width: 44, height: 44 }} source={{ uri: "https:" + props.icon }} />
+                <Text style={styles.tempText}>{props.temp} °C</Text>
+            </View>
         </View>
     );
 }
@@ -51,6 +53,9 @@ const styles = StyleSheet.create({
         width: 80,
         borderColor: 'white',
         margin: 5
+    },
+    bottomTriangle: {
+
     },
     dayTitle: {
         fontSize: 15,

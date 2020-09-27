@@ -16,6 +16,11 @@ export default function BottomBackground(props) {
     const [loading, setLoading] = useState(false);
     const [focusDay, setFocusDay] = useState(0);
 
+    /**
+     * Takes in a value and chooses the right color dependig on the value
+     * 
+     * @param {number} value - The value of the field
+     */
     function txtColour(value) {
         let col = "#26D701";
 
@@ -28,6 +33,9 @@ export default function BottomBackground(props) {
         return col;
     }
 
+    /**
+     * Calculates the average temp of the 3-day forecast.
+     */
     function weekAvg() {
         let total = 0;
 
@@ -38,6 +46,11 @@ export default function BottomBackground(props) {
         return Math.round(total / forecast.length);
     }
 
+    /**
+     * Makes the api call to the right path. Searches with the city entered by the user.
+     * 
+     * @param {*} event - The event, in this case a entre keypress.
+     */
     function searchCity(event) {
         const city = event.nativeEvent.text;
         const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${city}&days=7`;
@@ -58,6 +71,11 @@ export default function BottomBackground(props) {
         }
     }
 
+    /**
+     * Calls the api, but this time it uses the longitude and latitude of the user.
+     * 
+     * @param {Object} info - The info object of the user 
+     */
     async function searchCityLatLong(info) {
         const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${info}&days=7`;
 
@@ -76,6 +94,10 @@ export default function BottomBackground(props) {
         }
     }
 
+    /**
+     * Function that gets called when the user presses the use my location button. It is used to ensure that the location services
+     * have been accepted by the user, sets the loading icon on and formats the position before calling the search function.
+     */
     async function useMyLocation() {
         setLoading(true);
         let { status } = await Location.requestPermissionsAsync();
@@ -90,6 +112,9 @@ export default function BottomBackground(props) {
         }
     }
 
+    /**
+     * The if is there to show the homescreen if no city or location are used.
+     */
     if (forecast.length > 0) {
         return (
             <View style={styles.bottomBg}>
