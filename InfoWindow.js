@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import { ActivityIndicator, ImageBackground, StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity } from 'react-native';
 import * as Location from 'expo-location';
 
-import WeekCards from './WeekCards';
 import MoreInfo from "./MoreInfo";
 import DayCard from './DayCard';
 
@@ -123,12 +122,13 @@ export default function BottomBackground(props) {
                     {(!loading) ? <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text> : <ActivityIndicator animating={loading} size="large" color="#FFF" />}
                     <View style={styles.weekCards}>
                         {forecast.map((day, i) =>
-                            <TouchableOpacity key={i} onPress={() => {setFocusDay(i)}}>
+                            <TouchableOpacity key={i} onPress={() => { setFocusDay(i) }}>
                                 <DayCard key={i} index={i} focus={focusDay} icon={day.day.condition.icon} day={new Date(day.date.replace(/-/g, '/')).toString().substr(0, 3)} temp={Math.round(day.day.avgtemp_c)}></DayCard>
                             </TouchableOpacity>
                         )}
                         <DayCard day={"Average"} index={10} temp={weekAvg()} icon={"//cdn.iconscout.com/icon/free/png-256/science-research-testtube-experiment-bubble-study-project-2-7248.png"}></DayCard>
                     </View>
+                    <View style={[styles.arrow, { marginLeft: 41 + 90 * focusDay }]}><Text>Test</Text></View>
                     <MoreInfo windColour={txtColour(forecast[focusDay].day.maxwind_kph)} rainColour={txtColour(parseInt(forecast[focusDay].day.daily_chance_of_rain))} locationInfo={locationInfo} dayInfo={forecast[focusDay]}></MoreInfo>
                 </ImageBackground>
             </View>
@@ -153,6 +153,21 @@ const styles = StyleSheet.create({
     bottomBg: {
         height: winHeight,
         width: winWidth,
+    },
+    arrow: {
+        display: "flex",
+        alignSelf: "flex-start",
+        width: 0,
+        height: 0,
+        borderStyle: "solid",
+        borderTopWidth: 0,
+        borderRightWidth: 20,
+        borderBottomWidth: 20,
+        borderLeftWidth: 20,
+        borderTopColor: "transparent",
+        borderRightColor: "transparent",
+        borderBottomColor: "rgba(0, 0, 0, 0.3)",
+        borderLeftColor: "transparent",
     },
     location: {
         margin: 20,

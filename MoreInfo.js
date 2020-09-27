@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         width: "95%",
         margin: "auto",
-        marginTop: 8,
+        marginTop: 0,
         marginBottom: 8,
         borderRadius: 30,
         alignItems: "center",
