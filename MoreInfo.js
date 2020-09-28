@@ -61,7 +61,7 @@ const styles = StyleSheet.create({
         margin: "auto",
         marginTop: 0,
         marginBottom: 8,
-        borderRadius: 30,
+        borderRadius: 20,
         alignItems: "center",
         justifyContent: "space-evenly"
     },

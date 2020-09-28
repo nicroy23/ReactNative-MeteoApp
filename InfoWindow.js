@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { ActivityIndicator, ImageBackground, StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity } from 'react-native';
+import React, { useState, useRef } from 'react';
+import { ActivityIndicator, ImageBackground, StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity, Animated } from 'react-native';
 import * as Location from 'expo-location';
 
 import MoreInfo from "./MoreInfo";
@@ -14,6 +14,39 @@ export default function BottomBackground(props) {
     const [forecast, setForecast] = useState([]);
     const [loading, setLoading] = useState(false);
     const [focusDay, setFocusDay] = useState(0);
+    const [slideAnim] = useState(new Animated.Value(0));
+
+    /**
+     * Function to animate the little arrow that connects the more info window to the current day in the forecast. Animated the translateX
+     * value.
+     * 
+     * @param {number} toPos - The position in the forecast array that we click on. 
+     */
+    function slide(toPos) {
+        let translation = 180;
+
+        switch (toPos) {
+            case 1:
+                translation = 90;
+                break;
+            case 2:
+                translation = 180;
+                break;
+            default:
+                translation = 0;
+                break;
+        }
+
+        Animated.timing(
+            slideAnim,
+            {
+                toValue: translation,
+                duration: 100,
+                useNativeDriver: true
+            }
+        ).start();
+        setFocusDay(toPos);
+    }
 
     /**
      * Takes in a value and chooses the right color dependig on the value
@@ -118,17 +151,20 @@ export default function BottomBackground(props) {
         return (
             <View style={styles.bottomBg}>
                 <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={props.background}>
+                    <TouchableOpacity onPress={() => useMyLocation()} style={styles.locationBtnSmall}>
+                        <Text style={{fontSize: 25}}>🌐</Text>
+                    </TouchableOpacity>
                     <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}>{locationInfo.name}</TextInput>
                     {(!loading) ? <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text> : <ActivityIndicator animating={loading} size="large" color="#FFF" />}
                     <View style={styles.weekCards}>
                         {forecast.map((day, i) =>
-                            <TouchableOpacity key={i} onPress={() => { setFocusDay(i) }}>
+                            <TouchableOpacity key={i} onPress={() => { slide(i); }}>
                                 <DayCard key={i} index={i} focus={focusDay} icon={day.day.condition.icon} day={new Date(day.date.replace(/-/g, '/')).toString().substr(0, 3)} temp={Math.round(day.day.avgtemp_c)}></DayCard>
                             </TouchableOpacity>
                         )}
                         <DayCard day={"Average"} index={10} temp={weekAvg()} icon={"//cdn.iconscout.com/icon/free/png-256/science-research-testtube-experiment-bubble-study-project-2-7248.png"}></DayCard>
                     </View>
-                    <View style={[styles.arrow, { marginLeft: 41 + 90 * focusDay }]}><Text>Test</Text></View>
+                    <Animated.View style={[styles.arrow, { transform: [{ translateX: slideAnim }] }]}></Animated.View>
                     <MoreInfo windColour={txtColour(forecast[focusDay].day.maxwind_kph)} rainColour={txtColour(parseInt(forecast[focusDay].day.daily_chance_of_rain))} locationInfo={locationInfo} dayInfo={forecast[focusDay]}></MoreInfo>
                 </ImageBackground>
             </View>
@@ -157,6 +193,7 @@ const styles = StyleSheet.create({
     arrow: {
         display: "flex",
         alignSelf: "flex-start",
+        marginLeft: "10%", //Find a more responsive solution
         width: 0,
         height: 0,
         borderStyle: "solid",
@@ -202,6 +239,14 @@ const styles = StyleSheet.create({
         backgroundColor: "#06A94D",
         padding: 10,
         borderRadius: 30
+    },
+    locationBtnSmall: {
+        position: "absolute",
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
+        padding: 8,
+        borderRadius: 25,
+        right: winWidth/20,
+        top: winHeight/25
     },
     weekCards: {
         flexWrap: 'wrap',
