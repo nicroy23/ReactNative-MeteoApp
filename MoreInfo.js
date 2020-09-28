@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, Image } from 'react-native';
 
 export default function MoreInfo(props) {
     return (
-        <View style={styles.moreInfo}>
+        <View style={[styles.moreInfo, {opacity: props.winOpacity}]}>
             <View style={[styles.rowBox, { borderBottomWidth: 0 }]}>
                 <Text style={[styles.rowTxt, { fontSize: 30 }, { fontFamily: "Quicksand_600SemiBold" }, { color: "#FCAE1E" }]}>{props.locationInfo.name}</Text>
                 <Text style={[styles.rowTxt, { fontSize: 30 }, { fontFamily: "Quicksand_600SemiBold" }, { color: "#74BBFB" }]}>{(props.locationInfo.localtime).substr(-5)}</Text>
@@ -53,18 +53,6 @@ export default function MoreInfo(props) {
 }
 
 const styles = StyleSheet.create({
-    moreInfo: {
-        display: "flex",
-        flex: 1,
-        backgroundColor: "rgba(0, 0, 0, 0.3)",
-        width: "95%",
-        margin: "auto",
-        marginTop: 0,
-        marginBottom: 8,
-        borderRadius: 20,
-        alignItems: "center",
-        justifyContent: "space-evenly"
-    },
     rowBox: {
         display: "flex",
         flexDirection: "row",

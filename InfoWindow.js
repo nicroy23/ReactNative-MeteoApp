@@ -152,20 +152,24 @@ export default function BottomBackground(props) {
             <View style={styles.bottomBg}>
                 <ImageBackground style={styles.backImg} blurRadius={10} resizeMode="cover" source={props.background}>
                     <TouchableOpacity onPress={() => useMyLocation()} style={styles.locationBtnSmall}>
-                        <Text style={{fontSize: 25}}>🌐</Text>
+                        <Text style={{ fontSize: 25 }}>🌐</Text>
                     </TouchableOpacity>
                     <TextInput onSubmitEditing={(e) => searchCity(e)} keyboardAppearance="dark" returnKeyType="search" style={styles.location} placeholder="City name" placeholderTextColor={"lightgray"}>{locationInfo.name}</TextInput>
                     {(!loading) ? <Text style={styles.mainWeather}>{Math.round(temp)} °C</Text> : <ActivityIndicator animating={loading} size="large" color="#FFF" />}
                     <View style={styles.weekCards}>
                         {forecast.map((day, i) =>
-                            <TouchableOpacity key={i} onPress={() => { slide(i); }}>
+                            <TouchableOpacity key={i} onPress={() => { slide(i) }}>
                                 <DayCard key={i} index={i} focus={focusDay} icon={day.day.condition.icon} day={new Date(day.date.replace(/-/g, '/')).toString().substr(0, 3)} temp={Math.round(day.day.avgtemp_c)}></DayCard>
                             </TouchableOpacity>
                         )}
                         <DayCard day={"Average"} index={10} temp={weekAvg()} icon={"//cdn.iconscout.com/icon/free/png-256/science-research-testtube-experiment-bubble-study-project-2-7248.png"}></DayCard>
                     </View>
-                    <Animated.View style={[styles.arrow, { transform: [{ translateX: slideAnim }] }]}></Animated.View>
-                    <MoreInfo windColour={txtColour(forecast[focusDay].day.maxwind_kph)} rainColour={txtColour(parseInt(forecast[focusDay].day.daily_chance_of_rain))} locationInfo={locationInfo} dayInfo={forecast[focusDay]}></MoreInfo>
+                    <View style={styles.arrowParent}>
+                        <Animated.View style={[styles.arrow, { transform: [{ translateX: slideAnim }] }]}></Animated.View>
+                    </View>
+                    <Animated.View style={[styles.infoWindow, { opacity: infoOpacity }]}>
+                        <MoreInfo windColour={txtColour(forecast[focusDay].day.maxwind_kph)} rainColour={txtColour(parseInt(forecast[focusDay].day.daily_chance_of_rain))} locationInfo={locationInfo} dayInfo={forecast[focusDay]}></MoreInfo>
+                    </Animated.View>
                 </ImageBackground>
             </View>
         );
@@ -190,10 +194,24 @@ const styles = StyleSheet.create({
         height: winHeight,
         width: winWidth,
     },
-    arrow: {
+    arrowParent: {
         display: "flex",
-        alignSelf: "flex-start",
-        marginLeft: "10%", //Find a more responsive solution
+        width: "84%", //Little better than option before but not perfect.
+        margin: "auto"
+    },
+    infoWindow: {
+        display: "flex",
+        flex: 1,
+        backgroundColor: "rgba(0, 0, 0, 0.3)",
+        width: "95%",
+        margin: "auto",
+        marginTop: 0,
+        marginBottom: 8,
+        borderRadius: 20,
+        alignItems: "center",
+        justifyContent: "space-evenly"
+    },
+    arrow: {
         width: 0,
         height: 0,
         borderStyle: "solid",
@@ -245,8 +263,8 @@ const styles = StyleSheet.create({
         backgroundColor: "rgba(0, 0, 0, 0.3)",
         padding: 8,
         borderRadius: 25,
-        right: winWidth/20,
-        top: winHeight/25
+        right: winWidth / 20,
+        top: winHeight / 25
     },
     weekCards: {
         flexWrap: 'wrap',
