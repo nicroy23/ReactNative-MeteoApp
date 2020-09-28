@@ -85,7 +85,7 @@ export default function BottomBackground(props) {
      */
     function searchCity(event) {
         const city = event.nativeEvent.text;
-        const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${city}&days=7`;
+        const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${city}&days=7`;
 
         if (city.length > 0) {
             setLoading(true);
@@ -109,7 +109,7 @@ export default function BottomBackground(props) {
      * @param {Object} info - The info object of the user 
      */
     async function searchCityLatLong(info) {
-        const API_URL = `http://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${info}&days=7`;
+        const API_URL = `https://api.weatherapi.com/v1/forecast.json?key=c032f813f0944e46abf20521202209&q=${info}&days=7`;
 
 
         if (info.length > 0) {
