@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { ActivityIndicator, ImageBackground, StyleSheet, Text, View, Dimensions, TextInput, Image, TouchableOpacity, Animated } from 'react-native';
 import * as Location from 'expo-location';
 
@@ -49,7 +49,7 @@ export default function BottomBackground(props) {
     }
 
     /**
-     * Takes in a value and chooses the right color dependig on the value
+     * Takes in a value and chooses the right color depending on the value
      * 
      * @param {number} value - The value of the field
      */
